@@ -18,5 +18,7 @@
 * [编程语言](program/program.md)
 * * [Python](program/python.md)
 * * [Scala](program/scala.md)
+* [大数据技术](tech/tech.md)
+* * [Spark](teck/spark.md)
 * [进阶内容](advance/advance)
 * * [Docker](advance/docker.md)
