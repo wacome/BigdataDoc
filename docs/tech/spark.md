@@ -91,7 +91,7 @@ RDD封装了计算逻辑，是不可以改变的，想要改变，只能产生�
 ### 2.2.2 从集合中创建
 1) 从集合中创建RDD,Spark主要提供了两种函数：parallelize和makeRDD
 
-```scala
+```java
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 object createrdd01_array {
