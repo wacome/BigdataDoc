@@ -90,7 +90,7 @@ TODO
 
 <img src="../assets/ip7.png" alt="ip7" style="zoom: 67%;" />
 
-**将ip地址配置为刚才设置的**
+**将ip地址配置为刚才设置的，但是末位不能为0**
 
 <img src="../assets/ip13.png" alt="ip13" style="zoom: 67%;" />
 
@@ -128,7 +128,7 @@ TODO
 TYPE="Ethernet"
 PROXY_METHOD="none"
 BROWSER_ONLY="no"
-BOOTPROTO="static"	# 
+BOOTPROTO="static"	# 改为static
 DEFROUTE="yes"
 IPV4_FAILURE_FATAL="no"
 IPV6INIT="yes"
