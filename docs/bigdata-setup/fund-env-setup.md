@@ -14,7 +14,7 @@ TODO
 >
 > 自2004年3月以来，CentOS Linux一直是社区驱动的开源项目，旨在与[RHEL](https://baike.baidu.com/item/RHEL/2767838)在功能上兼容。
 
-下载CentOS 7的iso文件：http://mirrors.cqu.edu.cn/CentOS/7.9.2009/isos/x86_64/，找到[CentOS-7-x86_64-DVD-2009.iso](http://mirrors.cqu.edu.cn/CentOS/7.9.2009/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso)下载。 
+下载CentOS 7的iso文件：http://mirrors.cqu.edu.cn/CentOS/7.9.2009/isos/x86_64/ ，找到  [CentOS-7-x86_64-DVD-2009.iso](http://mirrors.cqu.edu.cn/CentOS/7.9.2009/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso) 下载。 
 
 ### 2.1 点击右上角文件，新建虚拟机
 
@@ -92,7 +92,7 @@ TODO
 
 **将ip地址配置为刚才设置的**
 
-<img src="../assets/ip8.png" alt="ip8" style="zoom: 67%;" />
+<img src="../assets/ip13.png" alt="ip13" style="zoom: 67%;" />
 
 ### 3.8 打开终端
 
@@ -141,8 +141,8 @@ UUID="73fcb4cf-239e-4263-bb7b-c13d07b8a4a5"
 DEVICE="ens33"
 ONBOOT="yes"	# 此处设置为yes
 # 添加这四行
-IPADDR=192.168.154.128
-GATEWAY=192.168.154.2
+IPADDR=192.168.157.128
+GATEWAY=192.168.157.2
 NETMASK=255.255.255.0
 DNS1=8.8.8.8
 ```
@@ -159,7 +159,33 @@ DNS1=8.8.8.8
 [root@bogon toycon]# ping www.baidu.com
 ```
 
-ping不通，待解决
+<img src="../assets/ip14.png" alt="ip14" style="zoom:67%;" />
+
+#### 若ping不通，则需要配置一下DNS
+
+打开虚拟网络编辑器，点击NAT设置
+
+<img src="../assets/ip15.png" alt="ip15" style="zoom:67%;" />
+
+然后点击DNS设置
+
+<img src="../assets/ip16.png" alt="ip16" style="zoom:67%;" />
+
+设置DNS为8.8.8.8，确定即可
+
+<img src="../assets/ip17.png" alt="ip17" style="zoom:67%;" />
+
+**然后设置centos7的DNS**
+
+```bash
+[root@localhost toycon]# vi /etc/resolv.conf
+```
+
+```
+nameserver 8.8.8.8		# 设置为这个即可
+```
+
+保存退出，在ping一下外网就能ping通了
 
 ## 4、基础配置
 
