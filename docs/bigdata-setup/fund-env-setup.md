@@ -6,11 +6,160 @@ TODO
 
 ## 2、Centos操作系统安装
 
-TODO
+> [!NOTE]
+>
+> CentOS是免费的、开源的、可以重新分发的开源操作系统，CentOS（Community Enterprise Operating System，中文意思是社区企业操作系统）是[Linux](https://baike.baidu.com/item/Linux/27050)发行版之一。
+>
+> CentOS Linux发行版是一个稳定的，可预测的，可管理的和可复现的平台，源于[Red Hat Enterprise Linux](https://baike.baidu.com/item/Red Hat Enterprise Linux/10770503)（RHEL）依照[开放源代码](https://baike.baidu.com/item/开放源代码/114160)规定释出的源码所编译而成。
+>
+> 自2004年3月以来，CentOS Linux一直是社区驱动的开源项目，旨在与[RHEL](https://baike.baidu.com/item/RHEL/2767838)在功能上兼容。
+
+下载CentOS 7的iso文件：http://mirrors.cqu.edu.cn/CentOS/7.9.2009/isos/x86_64/，找到[CentOS-7-x86_64-DVD-2009.iso](http://mirrors.cqu.edu.cn/CentOS/7.9.2009/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso)下载。 
+
+### 2.1 点击右上角文件，新建虚拟机
+
+<img src="../assets/vm1.png" alt="vm1" style="zoom:67%;" />
+
+### 2.2 选择典型
+
+<img src="../assets/vm2.png" alt="vm2" style="zoom:67%;" />
+
+### 2.3 点击浏览选择iso安装文件的目录
+
+<img src="../assets/vm3.png" alt="vm3" style="zoom:67%;" />
+
+### 2.4 输入信息
+
+<img src="../assets/vm4.png" alt="vm4" style="zoom:67%;" />
+
+**全名是指主机名**
+
+### 2.5 更改安装路径
+
+<img src="../assets/vm6.png" alt="vm6" style="zoom:67%;" />
+
+### 2.6 设置磁盘大小及存储类型
+
+<img src="../assets/vm7.png" alt="vm7" style="zoom:67%;" />
+
+### 2.7 完成
+
+<img src="../assets/vm8.png" alt="vm8" style="zoom:67%;" />
+
+### 2.8 等待安装
+
+<img src="../assets/vm9.png" alt="vm9" style="zoom:67%;" />
 
 ## 3、配置网络并连接ssh工具
 
-TODO
+> [!NOTE]
+>
+> 配置静态ip，便于连接ssh工具及后续安装操作
+
+### 3.1 打开虚拟网络编辑器
+
+<img src="../assets/ip1.png" alt="ip1" style="zoom:67%;" />
+
+### 3.2 点击更改设置
+
+<img src="../assets/ip2.png" alt="ip2" style="zoom:67%;" />
+
+### 3.3 配置ip及子网掩码
+
+<img src="../assets/ip3.png" alt="ip3" style="zoom: 50%;" />
+
+### 3.4 点击NAT设置
+
+<img src="../assets/ip4.png" alt="ip4" style="zoom:67%;" />
+
+### 3.5 配置网关
+
+> [!TIP]
+>
+> 一般来说，网关ip的网络部分即图中192.168.157部分与ip地址相同，最后一位配置为1或其他数字，但不能和ip冲突
+
+<img src="../assets/ip5.png" alt="ip5" style="zoom:67%;" />
+
+### 3.6 配置系统网络适配器
+
+打开设置，选择网络，可以看到里面有VMnet8，点击编辑
+
+<img src="../assets/ip6.png" alt="ip6" style="zoom: 50%;" />
+
+### 3.7 配置ipv4地址
+
+<img src="../assets/ip7.png" alt="ip7" style="zoom: 67%;" />
+
+**将ip地址配置为刚才设置的**
+
+<img src="../assets/ip8.png" alt="ip8" style="zoom: 67%;" />
+
+### 3.8 打开终端
+
+进入centos系统桌面，右键桌面，打开terminal
+
+<img src="../assets/ip9.png" alt="ip9" style="zoom: 67%;" />
+
+### 3.9 查看ip
+
+刚打开的terminal比较小，可以按`Ctrl`+`Shift`+`=`键放大
+
+<img src="../assets/ip10.png" alt="ip10" style="zoom: 67%;" />
+
+`ens33`为网卡，ip地址为192.168.157.128
+
+### 3.10 修改网卡配置文件
+
+进入root模式
+
+```bash
+[toycon@bogon ~]$ su
+```
+
+输入密码（注意密码不显示出来）回车即可
+
+```bash
+[root@bogon ~]$ vi /etc/sysconfig/network-scripts/ifcfg-ens33
+```
+
+**BOOTPROTO配置为static，ONBOOT设置为yes，添加四行配置信息，ip地址(IPADDR)，网关(GATEWAY)，子网掩码(NETMASK) 这些都要改成自己的，DNS1保持不变**
+
+```
+TYPE="Ethernet"
+PROXY_METHOD="none"
+BROWSER_ONLY="no"
+BOOTPROTO="static"	# 
+DEFROUTE="yes"
+IPV4_FAILURE_FATAL="no"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"
+IPV6_DEFROUTE="yes"
+IPV6_FAILURE_FATAL="no"
+IPV6_ADDR_GEN_MODE="stable-privacy"
+NAME="ens33"
+UUID="73fcb4cf-239e-4263-bb7b-c13d07b8a4a5"
+DEVICE="ens33"
+ONBOOT="yes"	# 此处设置为yes
+# 添加这四行
+IPADDR=192.168.154.128
+GATEWAY=192.168.154.2
+NETMASK=255.255.255.0
+DNS1=8.8.8.8
+```
+
+### 3.11 重启网络服务
+
+```bash
+[root@bogon toycon]# systemctl restart network
+```
+
+### 3.12 可以ping一下外网
+
+```bash
+[root@bogon toycon]# ping www.baidu.com
+```
+
+ping不通，待解决
 
 ## 4、基础配置
 
