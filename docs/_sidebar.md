@@ -20,5 +20,7 @@
 * * [Scala](program/scala.md)
 * [大数据技术](tech/tech.md)
 * * [Spark](tech/spark.md)
+* * [机器学习](tech/ml.md)
+* * [深度学习](tech/dl.md)
 * [进阶内容](advance/advance)
 * * [Docker](advance/docker.md)
