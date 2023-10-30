@@ -463,23 +463,23 @@ object value07_filter {
 object value08_sample {
 
     def main(args: Array[String]): Unit = {
-    
+
         //1.创建SparkConf并设置App名称
         val conf: SparkConf = new SparkConf().setAppName("SparkCoreTest").setMaster("local[*]")
-    
+
         //2.创建SparkContext，该对象是提交Spark App的入口
         val sc: SparkContext = new SparkContext(conf)
-    
+
         //3具体业务逻辑
         // 3.1 创建一个RDD
         val rdd: RDD[Int] = sc.makeRDD(1 to 10)
-    
+
         // 3.2 打印放回抽样结果
         rdd.sample(true, 0.4, 2).collect().foreach(println)
-    
+
         // 3.3 打印不放回抽样结果
         rdd.sample(false, 0.2, 3).collect().foreach(println)
-    
+
         //4.关闭连接
         sc.stop()
     }
@@ -592,7 +592,7 @@ object value11_repartition {
         val rdd: RDD[Int] = sc.makeRDD(Array(1, 2, 3, 4, 5, 6), 3)
         //3.1 缩减分区
         //val coalesceRdd: RDD[Int] = rdd.coalesce(2,true)
-        
+
         //3.2 重新分区
         val repartitionRdd: RDD[Int] = rdd.repartition(2)
 
@@ -927,10 +927,10 @@ object KeyValue03_groupByKey {
 
         //3.2 将相同key对应值聚合到一个Seq中
         val group: RDD[(String, Iterable[Int])] = rdd.groupByKey()
-        
+
         //3.3 打印结果
         group.collect().foreach(println)
-        
+
         //3.4 计算相同key对应值的相加结果
         group.map(t=>(t._1,t._2.sum)).collect().foreach(println)
 
@@ -1829,7 +1829,7 @@ object cache02 {
                 (word, 1)
             }
         }
-        
+
         // 采用reduceByKey，自带缓存
         val wordByKeyRDD: RDD[(String, Int)] = wordToOneRdd.reduceByKey(_+_)
 
