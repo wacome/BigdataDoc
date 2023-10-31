@@ -99,7 +99,7 @@ RDD封装了计算逻辑，是不可以改变的，想要改变，只能产生�
 ### 2.2.2 从集合中创建
 1) 从集合中创建RDD,Spark主要提供了两种函数：parallelize和makeRDD
 
-```java
+```scala
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 object createrdd01_array {
@@ -125,7 +125,7 @@ object createrdd01_array {
 在新建的SparkCoreTest1项目名称上右键->新建input文件夹->在input文件夹上右键->分别新建1.txt和2.txt。每个文件里面准备一些word单词。
 2) 创建RDD
 
-```
+```scala
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 object createrdd02_file {
@@ -175,7 +175,8 @@ val rdd2:RDD[Int] = sc.makeRDD(Array(1,2,3,4,5,6))
 6)Ctrl+h查找defaultParallelism的实现类：
 <font color=red>默认分区数=总的cpu核数（totalCores）</font>
 二.代码验证
-```
+
+```scala
 object partition01_default {
     def main(args: Array[String]): Unit = {
         //1.创建SparkConf并设置App名称
@@ -192,11 +193,12 @@ println("分区数：" + rdd.partitions.size)
 }
 产生了8个分区
 ```
+
 三.思考：数据就4个，分区却产生了8个，严重浪费资源，怎么办？
 ### 2.3.2 分区源码(RDD数据从集合中创建)
 1) 分区测试(RDD数据从集合中创建)
 
-```
+```scala
 object partition02_Array {
     def main(args: Array[String]): Unit = {
         val conf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkCoreTest1")
@@ -218,7 +220,7 @@ object partition02_Array {
 ### 2.3.3 默认分区源码(RDD数据从文件中读取后创建)
 1) 分区测试
 
-```
+```scala
 object partition03_file_default {
     def main(args: Array[String]): Unit = {
         val conf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkCoreTest")
@@ -235,7 +237,7 @@ object partition03_file_default {
 ### 2.3.4 分区源码(RDD数据从文件中读取后创建)
 1) 分区测试
 
-```
+```scala
 object partition04_file {
     def main(args: Array[String]): Unit = {
         val conf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("SparkCoreTest")
@@ -247,6 +249,7 @@ object partition04_file {
     }
 }
 ```
+
 <font color=red>注意：getSplits文件返回的是切片规划，真正读取是在compute方法中创建LineRecordReader读取的，有两个关键变量： start = split.getStart()	   end = start + split.getLength</font>
 
 ## 2.4 Transformation转换算子(面试开发重点)
@@ -254,7 +257,8 @@ RDD整体上分为Value类型、双Value类型和Key-Value类型
 ### 2.4.1 Value类型
 #### 2.4.1.1 map()映射
 具体实现
-```
+
+```scala
 object value01_map {
     def main(args: Array[String]): Unit = {
         //1.创建SparkConf并设置App名称
@@ -273,9 +277,11 @@ object value01_map {
     }
 }
 ```
+
 #### 2.4.1.2 mapPartitions()以分区为单位执行Map
 具体实现
-```
+
+```scala
 object value02_mapPartitions {
     def main(args: Array[String]): Unit = {
         //1.创建SparkConf并设置App名称
@@ -294,6 +300,7 @@ object value02_mapPartitions {
     }
 }
 ```
+
 #### 2.4.1.3 map()和mapPartitions()区别
 >map()：每次处理一条数据
 mapPartition()：每次处理一个分区的数据，这个分区的数据处理完后，原RDD中分区的数据才能释放，可能导致OOM
@@ -301,7 +308,8 @@ mapPartition()：每次处理一个分区的数据，这个分区的数据处理
 
 #### 2.4.1.4	mapPartitionsWithIndex()带分区号
 具体实现
-```
+
+```scala
 object value03_mapPartitionsWithIndex {
     def main(args: Array[String]): Unit = {
         //1.创建SparkConf并设置App名称
@@ -323,7 +331,8 @@ object value03_mapPartitionsWithIndex {
 
 #### 2.4.1.5 flatMap()压平
 具体实现:
-```
+
+```scala
 object value04_flatMap {
     def main(args: Array[String]): Unit = {
         //1.创建SparkConf并设置App名称
