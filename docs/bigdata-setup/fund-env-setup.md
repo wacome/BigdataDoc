@@ -14,7 +14,7 @@ TODO
 >
 > 自2004年3月以来，CentOS Linux一直是社区驱动的开源项目，旨在与[RHEL](https://baike.baidu.com/item/RHEL/2767838)在功能上兼容。
 
-下载CentOS 7的iso文件：http://mirrors.cqu.edu.cn/CentOS/7.9.2009/isos/x86_64/ ，找到  [CentOS-7-x86_64-DVD-2009.iso](http://mirrors.cqu.edu.cn/CentOS/7.9.2009/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso) 下载。 
+下载CentOS 7的iso文件：http://mirrors.cqu.edu.cn/CentOS/7.9.2009/isos/x86_64/ ，找到  [CentOS-7-x86_64-DVD-2009.iso](http://mirrors.cqu.edu.cn/CentOS/7.9.2009/isos/x86_64/CentOS-7-x86_64-DVD-2009.iso) 下载。
 
 ### 2.1 点击右上角文件，新建虚拟机
 
@@ -185,7 +185,7 @@ DNS1=8.8.8.8
 nameserver 8.8.8.8		# 设置为这个即可
 ```
 
-保存退出，在ping一下外网就能ping通了
+保存退出，再ping一下外网就能ping通了
 
 ## 4、基础配置
 
@@ -279,8 +279,8 @@ systemctl disable firewalld #永久禁用防火墙
 [root@master ~]# cd /usr/
 [root@master usr]# mkdir java				#创建/usr/java路径
 #解压tar包到当前目录
-[root@modules ~]# tar -zxvf /opt/modules/jdk-8u221-linux-x64.tar.gz -C /usr/java
-[root@modules ~]# cd /usr/java
+[root@master ~]# tar -zxvf /opt/software/jdk-8u221-linux-x64.tar.gz -C /usr/java
+[root@master ~]# cd /usr/java
 [root@master java]# mv jdk1.8.0_221/ jdk			#重命名配置
 ```
 
