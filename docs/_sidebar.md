@@ -27,3 +27,4 @@
 * * [深度学习](tech/dl.md)
 * [进阶内容](advance/advance)
 * * [Docker](advance/docker.md)
+* * [函数式编程](advance/fp.md)
