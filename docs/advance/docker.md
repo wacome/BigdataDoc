@@ -265,10 +265,34 @@ docker load -i <文件路径/备份文件>
 
 ## 搭建大数据环境
 
-### 拉取Centos7.9镜像
+### 编写Dockerfile
 
 ```bash
-docker pull centos:7.9.2009
+FROM centos:7.9.2009
+ENV container docker
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
+systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+rm -f /lib/systemd/system/multi-user.target.wants/*;\
+rm -f /etc/systemd/system/*.wants/*;\
+rm -f /lib/systemd/system/local-fs.target.wants/*; \
+rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+rm -f /lib/systemd/system/basic.target.wants/*;\
+rm -f /lib/systemd/system/anaconda.target.wants/*;
+RUN yum -y install iproute firewalld wget openssh-server openssh-clients which
+VOLUME [ "/sys/fs/cgroup" ]
+CMD ["/usr/sbin/init"]
+```
+
+### 构建镜像
+
+```bash
+docker build -t <镜像名称> <构建目录>
+```
+
+即
+```bash
+docker build -t centos .
 ```
 
 ### 查看镜像
@@ -278,14 +302,14 @@ docker images
 ```
 
 ```
-REPOSITORY   TAG        IMAGE ID       CREATED       SIZE
-centos       7.9.2009   eeb6ee3f44bd   2 years ago   204MB
+REPOSITORY   TAG          IMAGE ID       CREATED          SIZE
+centos       latest       9152fc55782c   18 seconds ago   462MB
 ```
 
 ### 以特权模式运行容器
 
 ```bash
-docker run -d --name master --hostname=master --restart=always --privileged=true -p 50090:50090 -p 8088:8088 centos:7.9.2009 /usr/sbin/init
+docker run -d --name master --hostname=master --restart=always --privileged=true -p 50090:50090 -p 8088:8088 centos:latest /usr/sbin/init
 ```
 
 若有`docker: Error response from daemon: Ports are not available: exposing port TCP 0.0.0.0:50090 -> 0.0.0.0:0: listen tcp 0.0.0.0:50090: bind: An attempt was made to access a socket in a way forbidden by its access permissions.`这个问题则需要打开Powershell管理员，然后再输入以下命令重启NAT网络：
@@ -311,10 +335,10 @@ docker exec -it master /bin/bash
 
 ```bash
 # slave1
-docker run -d --name slave1 --hostname=slave1 --restart=always --privileged=true centos:7.9.2009 /usr/sbin/init
+docker run -d --name slave1 --hostname=slave1 --restart=always --privileged=true centos:latest /usr/sbin/init
 
 #slave2
-docker run -d --name slave2 --hostname=slave2 --restart=always --privileged=true centos:7.9.2009 /usr/sbin/init
+docker run -d --name slave2 --hostname=slave2 --restart=always --privileged=true centos:latest /usr/sbin/init
 ```
 
 新开两个 Powershell 终端，分别进入容器
@@ -326,46 +350,3 @@ docker exec -it slave1 /bin/bash
 #slave2
 docker exec -it slave2 /bin/bash
 ```
-
-### 安装常用软件或命令
-
-因为是base镜像，所以一些常用软件或命令没有，在此安装一下(每个容器都要执行)
-
-```bash
-yum -y install iproute firewalld wget openssh-server openssh-clients which
-```
-
-### 安装fake-systemd服务
-
-Docker 在设计之初并没有选择使用 systemd 作为其默认的进程管理器，而是选择了自己的进程管理系统，但是我们要用到systemd服务，docker本身并不支持，所以要安装fake-systemd
-
-**替换 systemctl(注意路径，可以使用 whereis systemctl 查看当前默认路径)**
-
-```bash
-curl https://gitee.com/wacome/docker-systemctl-replacement/raw/master/files/docker/systemctl.py -o /usr/bin/systemctl
-```
-
-**给定权限**
-
-```bash
-chmod a+x /usr/bin/systemctl
-```
-
-#### 配置sshd
-
-需要配置sshd的主机密钥，不然无法启动
-
-```bash
-ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
-ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key
-ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key
-```
-
-#### 启动sshd
-
-```
-systemctl start sshd
-systemctl enable sshd
-systemctl status sshd		# 若为active，则启动成功
-```
-
