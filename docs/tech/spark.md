@@ -1,5 +1,8 @@
 # 1.Spark
 
+> [!NOTE]
+> 视频教程：[尚硅谷Spark教程](https://www.bilibili.com/video/BV11A411L7CK)
+
 ## 1.1 什么是RDD
 
 **RDD 是 Spark 提供的最重要的抽象概念，它是一种有容错机制的特殊数据集合，可以分布在集群的结点上，以函数式操作集合的方式进行各种并行操作。

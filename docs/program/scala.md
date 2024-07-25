@@ -1,6 +1,8 @@
 # Scala语言入门
 > [!NOTE]
 > 本文来自：[github tch0的笔记](https://github.com/tch0/notes/blob/master/Scala.md)
+> 
+> 视频教程：[尚硅谷Scala教程](https://www.bilibili.com/video/BV1Xh411S7bP)
 
 
 Scala（发音为/ˈskɑːlə, ˈskeɪlə/）是一门多范式的编程语言，设计初衷是要集成面向对象编程和函数式编程的各种特性。洛桑联邦理工学院的Martin Odersky于2001年基于Funnel的工作开始设计Scala。Java平台的Scala于2003年底/2004年初发布。

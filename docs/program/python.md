@@ -1,6 +1,8 @@
 # Python语言入门
 > [!NOTE]
 > 本文来自：[github tch0的笔记](https://github.com/tch0/notes/blob/master/Python.md)
+> 
+> 或者可以看[清华科协python基础教程](https://docs.net9.org/languages/python/)
 
 
 Python（英国发音：/ˈpaɪθən/ 美国发音：/ˈpaɪθɑːn/）是一种广泛使用的解释型、高级和通用的编程语言。Python支持多种编程范型，包括函数式、指令式、结构化、面向对象和反射式编程。它拥有动态类型系统和垃圾回收功能，能够自动管理内存使用，并且其本身拥有一个巨大而广泛的标准库。
