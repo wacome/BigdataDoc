@@ -1,5 +1,9 @@
 # 后续编辑须知
 
+### 文档地址
+
+- Github地址：[BigdataDoc](https://github.com/wacome/BigdataDoc)
+
 ### 前置知识
 - 了解 Markdown 语法：[清华科协Markdown基础教程](https://docs.net9.org/basic/markdown/)
 - 了解 Git 和 GitHub 的基本操作：[清华科协git基础教程](https://docs.net9.org/basic/git/)
