@@ -22,9 +22,7 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 ## 3、配置hadoopHA
 
 > [!TIP]
-> 比赛时可以将hadoop压缩包下载到本地，解压后，使用idea打开`hadoop-3.1.3/share/doc/hadoop`目录，然后打开此目录下的`index.html`文件，点击右上角的浏览器图标，即可查看hadoop的文档。
-> 打开之后，点击左侧导航栏`HDFS`->`NameNode HA With NFS`，即可查看hadoop的HDFS高可用文档。
-> 点击`YARN`->`ResourceManager HA`，即可查看hadoop的YARN高可用文档。
+> 比赛时可以将hadoop压缩包下载到本地，解压后，使用idea打开`hadoop-3.1.3/share/doc/hadoop`目录，然后打开此目录下的`index.html`文件，点击右上角的浏览器图标，即可查看hadoop的文档。 打开之后，点击左侧导航栏`HDFS`->`NameNode HA With NFS`，即可查看hadoop的HDFS高可用文档。  点击`YARN`->`ResourceManager HA`，即可查看hadoop的YARN高可用文档。
 > <img src="../assets/browser.png" alt="browser" style="zoom:50%;" />
 > <img src="../assets/ha_qjm.png" alt="ha_qjm" style="zoom:50%;" />
 > <img src="../assets/rm_ha.png" alt="rm_ha" style="zoom:50%;" />
