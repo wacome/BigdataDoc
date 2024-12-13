@@ -2,20 +2,17 @@
 
 ## 1、解压安装Flink
 
-任务一：将Flink 包解压到路径/opt/modules 目录下，将完整命令复制粘贴至粘贴至对应报告中;
-
 ```bash
-[root@master software]# tar -zxvf apache-flink-1.10.2.tar.gz -C /opt/modules
+[root@master software]# tar -zxvf flink-1.14.0-bin-scala_2.12.tgz -C /opt/module
+[root@master module]# mv flink-1.14.0-bin-scala_2.12/ flink
 ```
 
 ## 2、配置环境变量
 
-任务二：修改/etc/profile 文件，设置Flink 环境变量，并使环境变量生效将环境变量配置内容复制粘贴 至粘贴至对应报告中;
-
 ```bash
-[root@master modules]# vi /etc/profile
+[root@master module]# vi /etc/profile.d/bigdata.sh
 #FLINK_HOME
-export FLINK_HOME=/opt/modules/flink-yarn
+export FLINK_HOME=/opt/module/flink
 export PATH=$PATH:$FLINK_HOME/bin
 export HADOOP_CLASSPATH=`hadoop classpath`
 export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
@@ -28,7 +25,7 @@ export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
 
 ## 4、Per Job Cluster
 
-任务三：开 启 Hadoop 集 群， 在 yarn 上 以 per job 模 式 运 行 $FLINK_HOME/examples/batch/WordCount.jar，将运行结果复制粘贴至粘贴至对应报告中。
+开 启 Hadoop 集 群， 在 yarn 上 以 per job 模 式 运 行 $FLINK_HOME/examples/batch/WordCount.jar，将运行结果复制粘贴至粘贴至对应报告中。
 
 > [!NOTE]
 >
@@ -38,19 +35,19 @@ export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
 
 确认是否启动： jps
 
-如果没启：执行 start-all.sh
+如果没启：执行 `start-all.sh`
 
 **该模式不启动yarn-session（不需要预先在 YARN 上启动一个 Flink session），直接执行job**
 
 ### 4.2测试
 
 ```bash
-[root@master modules]# yum install -y nc
+[root@master module]# yum install -y nc
 #使用 netcat 在端口 22222 上创建一个监听（-l 参数代表监听）并保持开启（-k 参数代表保持开启）的 TCP 连接
-[root@master modules]# nc -lk 22222
+[root@master module]# nc -lk 22222
 #另起一个终端执行一下命令
 [root@master ~]# flink run -m yarn-cluster
-/opt/modules/flink/examples/batch/WordCount.jar --hostname master --port 22222
+/opt/module/flink/examples/batch/WordCount.jar --hostname master --port 22222
 #执行结果如下
 (a,5)
 (action,1)
@@ -66,3 +63,15 @@ export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
 ···
 ```
 
+> [!TIP]
+> 
+> 若出现以下错误：
+> ```
+> Exception in thread “Thread-5” java.lang.IllegalStateException: Trying to access closed classloader Please check if you store classloaders directly or indirectly in static fields. If the stacktrace suggests that the leak occurs in a third party library and cannot be fixed immediately, you can disable this check with the configuration ‘classloader.check-leaked-classloader’.
+> ```
+> 在flink-conf.yaml配置文件中增加如下设置
+> ```bash
+> [root@master flink]# vim conf/flink-conf.yaml 
+> classloader.check-leaked-classloader: false
+> ```
+>

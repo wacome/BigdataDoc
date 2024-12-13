@@ -1,60 +1,6 @@
 # Hive安装配置
 
-## 一、安装MySQL
-
-**若使用服务器环境，则无需安装与配置MySQL，可以直接安装配置Hive**
-
-### 1、下载wget命令
-
-```bash
-yum -y install wget
-```
-
-### 2、在线下载mysql安装包
-
-```bash
-wget https://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm
-```
-
-### 3、安装MySQL
-
-```bash
-rpm -ivh mysql57-community-release-el7-8.noarch.rpm
-```
-
-![installMysqlPackage](../assets/installMysqlPackage.png)
-
-### 4、安装mysql服务
-
-首先进入`cd /etc/yum.repos.d/`目录
-
-```bash
-cd /etc/yum.repos.d/
-```
-
-安装MySQL服务（这个过程可能有点慢）
-
-```bash
-yum -y install mysql-server
-```
-
-> 若安装MySQL时报错：
->
-> ![error](../assets/error.png)
->
-> 原因：MySQL GPG 密钥已过期导致
->
-> 解决办法：执行一下命令，解决
->
-> ```bash
-> rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
-> ```
->
-> 再次重新安装MySQL服务：
->
-> ```bash
-> yum -y install mysql-server
-> ```
+## 一、配置MySQL（训练服务器上可不用配置）
 
 > [!NOTE]
 >
@@ -63,20 +9,20 @@ yum -y install mysql-server
 ### 5、开启mysql服务
 
 ```bash
-[root@master yum.repos.d]# systemctl start mysqld
+[root@bigdata1 yum.repos.d]# systemctl start mysqld
 #开机自启动
-[root@master yum.repos.d]# systemctl enable mysqld
+[root@bigdata1 yum.repos.d]# systemctl enable mysqld
 ```
 
 ### 6、获取自动生成的随机密码
 
 ```bash
-[root@master yum.repos.d]# grep 'temporary password' /var/log/mysqld.log
+[root@bigdata1 yum.repos.d]# grep 'temporary password' /var/log/mysqld.log
 2022-11-27T11:02:13.862460Z 1 [Note] A temporary password is generated for
 root@localhost: lgu52Ggl8h*#
 ```
 ```bash
-[root@master yum.repos.d]# mysql -uroot -p
+[root@bigdata1 yum.repos.d]# mysql -uroot -p
 Enter password:
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 2
@@ -89,7 +35,7 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql>
 ```
 
-### 7、设置mysql的密码安全策略
+### 7、设置mysql的密码安全策略（若设置强密码，则无需配置）
 
 ```mysql
 #设置密码强度为低级
@@ -109,15 +55,15 @@ Query OK, 0 rows affected (0.00 sec)
 
 ```mysql
 #以新密码登录mysql
-[root@master yum.repos.d]# mysql -uroot -p123456
+[root@bigdata1 yum.repos.d]# mysql -uroot -p123456
 #创建用户
 mysql> create user 'root'@'%' identified by '123456';
 Query OK, 0 rows affected (0.00 sec)
 #允许远程连接(授予权限，很重要!)
-mysql> grant all privileges on *.* to 'root'@'%' with grant option;
+mysql> grant all privimleges on *.* to 'root'@'%' with grant option;
 Query OK, 0 rows affected (0.00 sec)
 #刷新权限
-mysql> flush privileges;
+mysql> flush privimleges;
 Query OK, 0 rows affected (0.00 sec)
 ```
 
@@ -125,75 +71,60 @@ Query OK, 0 rows affected (0.00 sec)
 
 ### 1、解压hive
 
-任务一:将Master 节点Hive 安装包解压到/opt/modules/ 目录下，将命令复制并粘贴至粘贴至对应报告中;
 
 ```bash
-[root@master software]# tar -zxvf apache-hive-2.3.4-bin.tar.gz -C /opt/modules/
+[root@bigdata1 software]# tar -zxvf apache-hive-3.1.2-bin.tar.gz -C /opt/module/
 ```
 
 **改名**
 
 ```bash
-[root@master modules]# mv apache-hive-2.3.4-bin hive-2.3.4
+[root@bigdata1 module]# mv apache-hive-3.1.2-bin hive-3.1.2
 ```
 
 ### 2、配置环境变量
 
-任务二:设置 Hive 环境变量，并使环境变量生效，并将环境变量配置内容复制并粘贴至粘贴至对应报告
-
-中;
-
 ```bash
-[root@master modules]# vi /etc/profile
+[root@bigdata1 module]# vim /etc/profile.d/bigdata.sh
 ```
 
 ```bash
 #HIVE_HOME
-export HIVE_HOME=/opt/modules/hive-2.3.4
+export HIVE_HOME=/opt/module/hive-3.1.2
 export PATH=$PATH:$HIVE_HOME/bin
 ```
 
 ```bash
-[root@master modules]# source /etc/profile
+[root@bigdata1 module]# source /etc/profile
 ```
 
-任务三(如下3-5):完成相关配置并添加所依赖包，将 MySQL 数据库作为 Hive 元数据库。初始化 Hive 元数据，并通过 schematool 相关命令执行初始化，将初始化结果复制粘贴至粘贴至对应报告中。
+添加所需依赖包，将 MySQL 数据库作为 Hive 元数据库。初始化 Hive 元数据，并通过 schematool 相关命令执行初始化
 
 ### 3、配置hive
 
 将mysql-connector-java-5.1.48-bin.jar文件上传到hive下的lib目录下
 
 ```bash
-[root@master software]# mv mysql-connector-java-5.1.48-bin.jar /opt/modules/hive-2.3.4/lib/
+[root@bigdata1 software]# mv mysql-connector-java-5.1.48-bin.jar /opt/module/hive-3.1.2/lib/
 ```
 
 修改hive-site.xml文件(没有该文件名，将hive-default.xml.template复制并改名为hive-site.xml)
 
 ```bash
-[root@master modules]# cd /opt/modules/hive-2.3.4/conf
-[root@master conf]# cp hive-default.xml.template hive-site.xml
+[root@bigdata1 module]# cd /opt/module/hive-3.1.2/conf
+[root@bigdata1 conf]# cp hive-default.xml.template hive-site.xml
 ```
 
 ```bash
-[root@master conf]# vi hive-site.xml
+[root@bigdata1 conf]# vim hive-site.xml
 ```
-
-> [!TIP]
->
-> vi中编辑文件小技巧：在命令模式下，先输入`gg`把光标移动到第一行第一列，然后输入`dG`删除所有行
 
 ```xml
 <configuration>
-	<!-- Hive 产生的元数据存放位置-->
-	<property>
-		<name>hive.metastore.warehouse.dir</name>
-		<value>/usr/hive_remote/warehouse</value>
-		<!--若/usr/hive_remote/warehouse路径 没有，则自行创建-->
-	</property>
 <!--需要登录MySQL数据库，创建一个 hive 数据库备用-->
 	<property>
         <name>javax.jdo.option.ConnectionURL</name>
-        <value>jdbc:mysql://master:3306/hive?
+        <value>jdbc:mysql://bigdata1:3306/hive?
 createDatabaseIfNotExist=true&amp;useSSL=false</value>
 	</property>
 <!--安装MySQL数据库的驱动类-->
@@ -211,7 +142,9 @@ createDatabaseIfNotExist=true&amp;useSSL=false</value>
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>123456</value>
 	</property>
+
 <!--cli 显示表头和列名-->
+<!--若无要求，可以不用配置-->
 	<property>
         <name>hive.cli.print.header</name>
         <value>true</value>
@@ -226,8 +159,8 @@ createDatabaseIfNotExist=true&amp;useSSL=false</value>
 ### 4、初始化mysql元数据库
 
 ```bash
-[root@master conf]# cd ..
-[root@master hive-2.3.4]# bin/schematool -dbType mysql -initSchema
+[root@bigdata1 conf]# cd ..
+[root@bigdata1 hive-3.1.2]# bin/schematool -dbType mysql -initSchema
 SLF4J: Class path contains multiple SLF4J bindings.
 SLF4J: Found binding in [jar:file:/opt/hive/lib/log4j-slf4j-impl-
 2.6.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
@@ -235,7 +168,7 @@ SLF4J: Found binding in [jar:file:/opt/hadoop/share/hadoop/common/lib/slf4j-
 log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
 SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
 SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
-Metastore connection URL:    jdbc:mysql://master:3306/hive?
+Metastore connection URL:    jdbc:mysql://bigdata1:3306/hive?
 createDatabaseIfNotExist=true&useSSL=false
 Metastore Connection Driver :    com.mysql.jdbc.Driver
 Metastore connection User:   root
@@ -244,6 +177,50 @@ Initialization script hive-schema-2.3.0.mysql.sql
 Initialization script completed
 schemaTool completed
 ```
+
+**以下问题，若初始化元数据库未发生，需注意之后启动hive是否有对应的错误**
+
+> [!TIP]
+>
+> 若出现以下错误，则需要解决guava包的冲突问题
+> ```
+> java.lang.NoSuchMethodError: com.google.common.base.Preconditions.checkArgument
+> ```
+> 解决方法：
+> 删除hive中低版本的guava-19.0.jar包，将hadoop中的guava-27.0-jre.jar复制到hive的lib目录下即可
+> ```bash
+> [root@bigdata1 hive-3.1.2]# rm -f lib/guava*
+> ```
+> ```bash
+> [root@bigdata1 lib]# cp /opt/module/hadoop-3.1.3/share/hadoop/common/lib/guava-27.0-jre.jar /opt/module/hive-3.1.2/lib/
+> ```
+>
+
+---
+
+> [!TIP]
+>
+> 若出现以下错误，则需要解决hive-site.xml中变量未定义的问题
+> 
+> ```
+> Caused by: java.net.URISyntaxException: Relative path in absolute URI: ${system:java.io.tmpdir%7D/$%7Bsystem:user.name%7D
+> ```
+> 解决方法：
+> 将以下内容添加到hive-site.xml中
+>
+> ```xml
+>   <property>
+>    <name>system:java.io.tmpdir</name>
+>    <value>/tmp/hive/java</value>
+>  </property>
+>  <property>
+>    <name>system:user.name</name>
+>    <value>${user.name}</value>
+>  </property>
+> ```
+>
+
+---
 
 > [!TIP]
 >
@@ -260,7 +237,7 @@ schemaTool completed
 > 创建数据库：
 >
 > ```bash
-> [root@master hive-2.3.4]# mysql -uroot -p123456
+> [root@bigdata1 hive-3.1.2]# mysql -uroot -p123456
 > ```
 >
 > ```mysql
@@ -271,12 +248,11 @@ schemaTool completed
 ### 5、启动hive
 
 ```bash
-[root@master hive]# bin/hive 					#注意:启动hive之前一定要启动hadoop
+[root@bigdata1 hive]# hive 					#注意:启动hive之前一定要启动hadoop
 hive>
 #查看数据库，测试启动是否成功
 hive (default)> show databases;
 OK
-database_name
 default
 Time taken: 6.924 seconds, Fetched: 1 row(s)
 hive (default)>
@@ -291,7 +267,7 @@ org.apache.hadoop.hive.ql.metadata.HiveException: java.lang.RuntimeException: Un
 **开启metastore服务：**
 
 ```bash
-nohup hive --service metastore > /dev/null 2>&1 &
+nohup hive --servimce metastore > /dev/null 2>&1 &
 ```
 
 - `nohup` 是一个 Linux 命令，它用于运行一个命令，同时忽略所有挂断（HUP）信号。这意味着即使你关闭了终端，命令也会继续运行。

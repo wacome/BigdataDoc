@@ -1,11 +1,11 @@
 # Hadoop完全分布式配置安装
 ### 1 、解压hadoop
 ```bash
-[root@bigdata1 software]# tar -zxvf /opt/module/hadoop-3.1.3.tar.gz -C /opt/module/
+[root@bigdata1 module]# tar -zxvf /opt/software/hadoop-3.1.3.tar.gz -C /opt/module/
 ```
 ### 2 、环境变量配置
 ```bash
-[root@bigdata1 module]# vim /etc/profile
+[root@bigdata1 module]# vim /etc/profile.d/bigdata.sh
 ```
 ```bash
 #HADOOP_HOME
@@ -19,37 +19,53 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 
 ### 3 、配置hadoop
 
-#### 3.1为Hadoop提供JAVA解释器路径信息，为Yarn任务、资源管理器提供Java运行环境
-
-
+#### 3.1提取hadoop默认配置文件
 ```bash
-[root@bigdata1 module]# cd /opt/module/hadoop-3.1.3/etc/hadoop/
-[root@bigdata1 hadoop]# vim hadoop-env.sh
-export JAVA_HOME=/usr/java/jdk1.8.0_221       # 可以在vim命令模式输入/export JAVA_HOME，快速找到要修改的位置，或者在最上面添加
-[root@bigdata1 hadoop]# vim yarn-env.sh
-export JAVA_HOME=/usr/java/jdk1.8.0_221       # 若jdk路径和这里的不同，需要修改
+# 提取 core-default.xml,mapred-default.xml,yarn-default.xml
+[root@bigdata1 hadoop-3.1.3]# cd share/hadoop/common/client
+[root@bigdata1 client]# jar xf hadoop-common-2.7.7-client.jar core-default.xml
+[root@bigdata1 client]# jar xf hadoop-common-2.7.7-client.jar mapred-default.xml
+[root@bigdata1 client]# jar xf hadoop-common-2.7.7-client.jar yarn-default.xml
+
+# 提取 hdfs-default.xml
+[root@bigdata1 hadoop-3.1.3]# cd share/hadoop/common/hdfs
+[root@bigdata1 hdfs]# jar xf hadoop-hdfs-3.1.3.jar hdfs-default.xml
+
+# 重命名文件
+[root@bigdata1 hdfs]# mv hdfs-default.xml.template hdfs-site.xml
+[root@bigdata1 hdfs]# mv core-default.xml.template core-site.xml
+[root@bigdata1 hdfs]# mv mapred-default.xml.template mapred-site.xml
+[root@bigdata1 hdfs]# mv yarn-default.xml.template yarn-site.xml
+
+# 复制并替换原有配置文件
+[root@bigdata1 client]# cp hdfs-site.xml /opt/module/hadoop-3.1.3/etc/hadoop/
+[root@bigdata1 client]# cp mapred-site.xml /opt/module/hadoop-3.1.3/etc/hadoop/
+[root@bigdata1 client]# cp yarn-site.xml /opt/module/hadoop-3.1.3/etc/hadoop/
+[root@bigdata1 client]# cp core-site.xml /opt/module/hadoop-3.1.3/etc/hadoop/
+
 ```
 
-#### 3.2配置HDFS主节点信息、持久化和数据文件的主目录
+#### 3.2配置HDFS数据文件的主目录
 
 ```bash
 [root@bigdata1 hadoop]# vim core-site.xml
 ```
+**使用vim的查找命令`/`查找对应修改内容**
 
 ```xml
-<!-- 配置hadoop文件系统-->
+<!-- 配置hadoop文件系统，只需修改value标签包裹的值-->
 <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://bigdata1:9000</value>
+        <value>hdfs://bigdata1:8020</value>
 </property>
-<!-- 配置hadoop临时目录-->
+
 <property>
-        <name>hadoop.tmp.dir</name>
-        <value>/opt/module/hadoop-3.1.3/tmp</value>
+        <name>fs.default.name</name>
+        <value>hdfs://bigdata1:8020</value>
 </property>
 ```
 
-#### 3.3配置HDFS默认的数据存放策略
+#### 3.3配置HDFS默认的数据存放策略（若题目未要求，无需配置）
 
 ```bash
 [root@bigdata1 hadoop]# vim hdfs-site.xml
@@ -74,10 +90,9 @@ export JAVA_HOME=/usr/java/jdk1.8.0_221       # 若jdk路径和这里的不同�
 </property>
 ```
 
-#### 3.4配置mapreduce任务调度策略
+#### 3.4配置mapreduce任务调度策略（若题目未要求，无需配置）
 
 ```bash
-[root@bigdata1 hadoop]# cp mapred-site.xml.template mapred-site.xml
 [root@bigdata1 hadoop]# vim mapred-site.xml
 ```
 
@@ -89,7 +104,7 @@ export JAVA_HOME=/usr/java/jdk1.8.0_221       # 若jdk路径和这里的不同�
 </property>
 ```
 
-#### 3.5配置Yarn资源管理角色的信息
+#### 3.5配置Yarn资源管理角色的信息（若题目未要求，无需配置）
 
 ```bash
 [root@bigdata1 hadoop]# vim yarn-site.xml
@@ -120,6 +135,9 @@ export JAVA_HOME=/usr/java/jdk1.8.0_221       # 若jdk路径和这里的不同�
 
 #### 3.6配置datanode节点信息
 
+若题目要求配置三个datanode节点，则写入bigdata1、bigdata2、bigdata3节点。
+若只配置两个datanode节点，则写入bigdata2、bigdata3节点。
+
 ```bash
 [root@bigdata1 hadoop]# vim workers
 ```
@@ -130,16 +148,45 @@ bigdata2
 bigdata3
 ```
 
-#### 3.7分发hadoop及环境变量
+#### 3.7配置hadoop使用root启动
 
 ```bash
-[root@bigdata1 hadoop]# scp /etc/profile bigdata2:/etc/profile
+[root@bigdata1 hadoop-3.1.3]# vim start-dfs.sh
+```
+
+在文件中添加以下内容：
+
+```
+HDFS_DATANODE_USER=root
+HDFS_NAMENODE_USER=root
+HDFS_SECONDARYNAMENODE_USER=root
+```
+
+同理，`stop-dfs.sh`中也需要添加上面的内容，此处不再赘述。
+
+下面，修改`start-yarn.sh`文件
+
+```bash
+[root@bigdata1 hadoop]# vim start-yarn.sh
+```
+
+```
+YARN_RESOURCEMANAGER_USER=root
+YARN_NODEMANAGER_USER=root
+```
+
+同理，`stop-yarn.sh`中也需要添加上面的内容，此处不再赘述。
+
+#### 3.8分发hadoop及环境变量
+
+```bash
+[root@bigdata1 hadoop]# scp /etc/profile.d/bigdata.sh bigdata2:/etc/profile.d/
 profile												100% 2008   831.6KB/s   00:00			# 此为成功的提示
-[root@bigdata1 hadoop]# scp /etc/profile bigdata3:/etc/profile
+[root@bigdata1 hadoop]# scp /etc/profile.d/bigdata.sh bigdata3:/etc/profile.d/
 profile												100% 2008   612.5KB/s   00:00			# 此为成功的提示
 Tips:分发环境变量后一定要在分发的两个节点刷新一下 (source /etc/profile)
-[root@bigdata1 hadoop]# scp -r /opt/module/hadoop-3.1.3/ bigdata2:/opt/modules
-[root@bigdata1 hadoop]# scp -r /opt/module/hadoop-3.1.3/ bigdata3:/opt/modules
+[root@bigdata1 hadoop]# scp -r /opt/module/hadoop-3.1.3/ bigdata2:/opt/module/
+[root@bigdata1 hadoop]# scp -r /opt/module/hadoop-3.1.3/ bigdata3:/opt/module/
 ```
 
 ### 4 、格式化hadoop
@@ -157,7 +204,7 @@ Tips:分发环境变量后一定要在分发的两个节点刷新一下 (source 
 /opt/hadoop-3.1.3/tmp/dfs/name/current/fsimage.ckpt_0000000000000000000 using no
 compression
 22/11/28 11:23:13 INFO namenode.FSImageFormatProtobuf: Image file /opt/hadoop-
-2.7.7/tmp/dfs/name/current/fsimage.ckpt_0000000000000000000 of size 321 bytes
+3.1.3/tmp/dfs/name/current/fsimage.ckpt_0000000000000000000 of size 321 bytes
 saved in 0 seconds.
 22/11/28 11:23:13 INFO namenode.NNStorageRetentionManager: Going to retain 1
 images with txid >= 0
@@ -186,17 +233,14 @@ SHUTDOWN_MSG: Shutting down NameNode at bigdata1/192.168.239.157
 10189 DataNode
 ```
 ```bash
-[root@bigdata2 usr]# jps
+[root@bigdata1 usr]# jps
 10099 DataNode
 10195 NodeManager
 10295 Jps
 ```
 ```bash
-[root@bigdata3 usr]# jps
+[root@bigdata2 usr]# jps
 10065 Jps
 9869 DataNode
 9965 NodeManager
 ```
-
-> [!NOTE]
-> [参考官方文档](https://hadoop.apache.org/docs/r2.7.7/hadoop-project-dist/hadoop-common/ClusterSetup.html)

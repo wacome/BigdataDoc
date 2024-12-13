@@ -3,33 +3,32 @@
 ## 1 、hadoop安装
 任务四:修改 Hadoop 环境变量，并将(/etc/profile)配置文件内容复制粘贴至对应报告中;
 
-任务五:在主机 master 上将 Hadoop 解压到/opt/modules 目录下，配置好相关文件(并要求namenode 的web 端访问端口配置为15887，配置指定 MapReduce 程序运行在Yarn 上，指定ResourceManager 的地址 为伪分布式部署所在主机)，将全部命令以及配置文件内容复制并粘贴至对应报告中;
+任务五:在主机 master 上将 Hadoop 解压到/opt/module 目录下，配置好相关文件(并要求namenode 的web 端访问端口配置为15887，配置指定 MapReduce 程序运行在Yarn 上，指定ResourceManager 的地址 为伪分布式部署所在主机)，将全部命令以及配置文件内容复制并粘贴至对应报告中;
 ```bash
 #上传hadoop安装包到/opt/software/目录下
- #解压tar包到/opt/modules/目录下
- [root@master software]# tar -zxvf /opt/modules/hadoop-2.7.7.tar.gz -C /opt/modules/
+ #解压tar包到/opt/module/目录下
+ [root@master software]# tar -zxvf /opt/software/hadoop-3.1.3.tar.gz -C /opt/module/
 ```
 ```bash
  #重命名配置
- [root@master modules]# mv hadoop-2.7.7/ hadoop
+ [root@master module]# mv hadoop-3.1.3/ hadoop
 ```
 ```bash
  #配置环境变量
- [root@master modules]# vi /etc/profile
+ [root@master module]# vim /etc/profile
  #HADOOP_HOME
- export HADOOP_HOME=/opt/modules/hadoop
+ export HADOOP_HOME=/opt/module/hadoop
  export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
- [root@master modules]# source /etc/profile
+ [root@master module]# source /etc/profile
 ```
 ```bash
- [root@master modules]# hadoop version
- Hadoop 2.7.7
- Subversion Unknown -r c1aad84bd27cd79c3d1a7dd58202a8c3ee1ed3ac
- Compiled by stevel on 2018-07-18T22:47Z
+ [root@master module]# hadoop version
+ Hadoop 3.1.3
+ Source code repository https://gitbox.apache.org/repos/asf/hadoop.git -r  ba631c436b806728f8ec2f54ab1e289526c90579
+ Compiled by ztang on 2019-09-12T02:47Z
  Compiled with protoc 2.5.0
- From source with checksum 792e15d20b12c74bd6f19a1fb886490
- This command was run using /opt/modules/hadoop/share/hadoop/common/hadoop-common- 2.7.7.jar
- [root@master opt]#
+ From source with checksum ec785077c385118ac91aadde5ec9799
+ This command was run using /opt/module/hadoop-3.1.3/share/hadoop/common/hadoop-common-3.1.3.jar
 ```
 
 ## 2 、hadoop配置
@@ -37,18 +36,18 @@
 修改 hadoop-env.sh、yarn-env.sh、mapred-env.sh 设置 Hadoop 环境对应的 JDK
 
 ```bash
-[root@master hadoop]# vi hadoop-env.sh
+[root@master hadoop]# vim hadoop-env.sh
 export JAVA_HOME=/usr/java/jdk
-[root@node01 hadoop]# vi yarn-env.sh
+[root@node01 hadoop]# vim yarn-env.sh
 export JAVA_HOME=/usr/java/jdk
-[root@node01 hadoop]# vi mapred-env.sh
+[root@node01 hadoop]# vim mapred-env.sh
 export JAVA_HOME=/usr/java/jdk
 ```
 
 修改 core-site.xml 配置文件
 
 ```bash
-[root@master hadoop]# vi core-site.xml
+[root@master hadoop]# vim core-site.xml
 ```
 
 ```xml
@@ -60,7 +59,7 @@ export JAVA_HOME=/usr/java/jdk
 <!--临时数据目录，用来存放数据，格式化时会自动生成-->
 	<property>
     <name>hadoop.tmp.dir</name>
-    <value>/opt/modules/hadoop/tmp</value>
+    <value>/opt/module/hadoop/tmp</value>
   </property>
 </configuration>
 ```
@@ -68,7 +67,7 @@ export JAVA_HOME=/usr/java/jdk
 修改 hdfs-site.xml 配置文件
 
 ```bash
-[root@master hadoop]# vi hdfs-site.xml
+[root@master hadoop]# vim hdfs-site.xml
 ```
 
 ```xml
@@ -99,7 +98,7 @@ mapred-site.xml ，把 mapred-sit.xml.template 复制一份，修改为 mapred-s
 ```
 
 ```bash
-[root@master hadoop]# vi mapred-site.xml
+[root@master hadoop]# vim mapred-site.xml
 ```
 
 ```xml
@@ -114,7 +113,7 @@ mapred-site.xml ，把 mapred-sit.xml.template 复制一份，修改为 mapred-s
 yarn-site.xml 添加相应配置
 
 ```bash
-[root@master hadoop]# vi yarn-site.xml
+[root@master hadoop]# vim yarn-site.xml
 ```
 
 ```xml
@@ -136,8 +135,8 @@ yarn-site.xml 添加相应配置
 
 ```bash
 # 替换 slaves 中的节点名称
-[root@master hadoop]# echo master > slaves
-[root@master hadoop]# cat slaves
+[root@master hadoop]# echo master > workers
+[root@master hadoop]# cat workers
 master
 ```
 
@@ -159,17 +158,17 @@ master
 [root@master hadoop]# start-all.sh
 This script is Deprecated. Instead use start-dfs.sh and start-yarn.sh
 Starting namenodes on [master]
-master: starting namenode, logging to /opt/modules/hadoop/logs/hadoop-root-namenode-
+master: starting namenode, logging to /opt/module/hadoop/logs/hadoop-root-namenode-
 master.out
-master: starting datanode, logging to /opt/modules/hadoop/logs/hadoop-root-datanode-
+master: starting datanode, logging to /opt/module/hadoop/logs/hadoop-root-datanode-
 master.out
 Starting secondary namenodes [master]
-master: starting secondarynamenode, logging to /opt/modules/hadoop/logs/hadoop-root-
+master: starting secondarynamenode, logging to /opt/module/hadoop/logs/hadoop-root-
 secondarynamenode-master.out
 starting yarn daemons
-starting resourcemanager, logging to /opt/modules/hadoop/logs/yarn-root-resourcemanager-
+starting resourcemanager, logging to /opt/module/hadoop/logs/yarn-root-resourcemanager-
 master.out
-master: starting nodemanager, logging to /opt/modules/hadoop/logs/yarn-root-nodemanager-
+master: starting nodemanager, logging to /opt/module/hadoop/logs/yarn-root-nodemanager-
 master.out
 [root@master hadoop]# jps
 11120 Jps
