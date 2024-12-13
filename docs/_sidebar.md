@@ -16,6 +16,7 @@
 * * [Hadoop伪分布式配置安装](bigdata_setup/hadoop_pseudo.md)
 * * [Hadoop完全分布式配置安装](bigdata_setup/hadoop_distributed.md)
 * * [Hadoop完全分布式配置安装（比赛版本）](bigdata_setup/hadoop_distributed_contest.md)
+* * [Hadoop高可用配置安装](bigdata_setup/hadoop_ha.md)
 * * [Hive安装配置](bigdata_setup/hive.md)
 * * [Hive安装配置（比赛版本）](bigdata_setup/hive_contest.md)
 * * [Zookeeper集群部署](bigdata_setup/zookeeper.md)
