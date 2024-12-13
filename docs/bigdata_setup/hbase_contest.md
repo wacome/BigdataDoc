@@ -28,7 +28,7 @@ export PATH=$PATH:$HBASE_HOME/bin
 [root@bigdata1 lib]# mv hbase-default.xml hbase-site.xml
 
 # 复制到hbase目录下
-[root@bigdata1 lib]# cp hbase-site.xml /opt/module/hbase-2.2.3/conf/
+[root@bigdata1 lib]# cp -f hbase-site.xml /opt/module/hbase-2.2.3/conf/
 ```
 
 ## 3、修改hbase-site.xml
