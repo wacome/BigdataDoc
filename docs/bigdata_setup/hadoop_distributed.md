@@ -130,7 +130,36 @@ bigdata2
 bigdata3
 ```
 
-#### 3.7分发hadoop及环境变量
+#### 3.7配置hadoop使用root启动
+
+```bash
+[root@bigdata1 hadoop-3.1.3]# vim start-dfs.sh
+```
+
+在文件中添加以下内容：
+
+```
+HDFS_DATANODE_USER=root
+HDFS_NAMENODE_USER=root
+HDFS_SECONDARYNAMENODE_USER=root
+```
+
+同理，`stop-dfs.sh`中也需要添加上面的内容，此处不再赘述。
+
+下面，修改`start-yarn.sh`文件
+
+```bash
+[root@bigdata1 hadoop]# vim start-yarn.sh
+```
+
+```
+YARN_RESOURCEMANAGER_USER=root
+YARN_NODEMANAGER_USER=root
+```
+
+同理，`stop-yarn.sh`中也需要添加上面的内容，此处不再赘述。
+
+#### 3.8分发hadoop及环境变量
 
 ```bash
 [root@bigdata1 hadoop]# scp /etc/profile bigdata2:/etc/profile
