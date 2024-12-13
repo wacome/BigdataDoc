@@ -62,7 +62,7 @@ a1.sinks.k1.channel = c1
 [root@bigdata1 flume]# flume-ng agent -n a1 -c conf -f conf/flume-hdfs.conf -Dflume.root.logger=INFO,console
 ```
 
-查看HDFS中/tmp/flume目录下生成的内容
+查看HDFS中/tmp/flume目录下生成的内容，另开一个bigdata1终端执行以下命令
 
 ```bash
 [root@bigdata1 flume]# hdfs dfs -ls /tmp/flume

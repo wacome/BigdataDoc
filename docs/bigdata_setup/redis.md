@@ -60,6 +60,8 @@ make[1]: Leaving directory `/opt/module/redis-6.2.6/src'
 
 ## 5、redis客户端连接
 
+另开一个bigdata1终端，连接redis
+
 ```bash
 [root@bigdata1 redis-6.2.6]# redis-cli
 ```
