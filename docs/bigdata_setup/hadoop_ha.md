@@ -253,7 +253,7 @@ SHUTDOWN_MSG: Shutting down DFSZKFailoverController at bigdata1/192.168.45.10
 [root@bigdata1 hadoop-ha]# start-all.sh
 ```
 
-## 8、查看服务nn2与rm2进程状态
+## 12、查看服务nn2与rm2进程状态
 
 ```bash
 [root@bigdata1 hadoop-ha]# hdfs haadmin -getServiceState nn2
