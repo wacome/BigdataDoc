@@ -82,7 +82,7 @@ server.2=bigdata2:2888:3888
 server.3=0.0.0.0:2888:3888
 ```
 
-### 6、配置环境变量
+### 7、配置环境变量
 
 配置环境变量：（三台全部配）
 
@@ -100,7 +100,7 @@ source /etc/profile
 
 
 
-7. 启动Zookeeper集群
+### 8. 启动Zookeeper集群
 
 ```shell
 （1）分别启动Zookeeper  （三台都要执行）
