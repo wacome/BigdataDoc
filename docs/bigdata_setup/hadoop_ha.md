@@ -31,6 +31,10 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 
 ### 3.1、配置hdfs-site.xml
 
+```bash
+[root@bigdata1 hadoop-ha]# vim etc/hadoop/hdfs-site.xml
+```
+
 ```xml
 <!-- nameservices(名称服务)的逻辑名称 -->
 <property>
@@ -54,20 +58,41 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
   <value>bigdata2:8020</value>
 </property>
 
+<!-- 标识 NameNode 将写入/读取编辑的 JN 组的 URI -->
+<property>
+  <name>dfs.namenode.shared.edits.dir</name>
+  <value>qjournal://bigdata1:8485;bigdata2:8485/hadoopcluster</value>
+</property>
+
 <!-- 配置自动故障转移 -->
- <property>
-   <name>dfs.ha.automatic-failover.enabled</name>
-   <value>true</value>
- </property>
+<property>
+  <name>dfs.ha.automatic-failover.enabled</name>
+  <value>true</value>
+</property>
+
+<!-- 配置自动故障转移的方法（使用ssh） -->
+<property>
+  <name>dfs.ha.fencing.methods</name>
+  <value>sshfence</value>
+</property>
+
+<property>
+  <name>dfs.ha.fencing.ssh.private-key-files</name>
+  <value>/root/.ssh/id_rsa</value>
+</property>
 ```
 
 ### 3.2、配置core-site.xml
+
+```bash
+[root@bigdata1 hadoop-ha]# vim etc/hadoop/core-site.xml
+```
 
 ```xml
 <!-- HDFS的默认文件系统URI -->
 <property>
   <name>fs.defaultFS</name>
-  <value>hdfs://mycluster</value>
+  <value>hdfs://hadoopcluster</value>
 </property>
 
 <!-- 指定zookeeper -->
@@ -78,6 +103,10 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 ```
 
 ### 3.3、配置yarn-site.xml
+
+```bash
+[root@bigdata1 hadoop-ha]# vim etc/hadoop/yarn-site.xml
+```
 
 ```xml
 <!-- 配置yarn高可用 -->
@@ -111,14 +140,26 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 <!-- zookeeper地址 -->
 <property>
   <name>hadoop.zk.address</name>
-  <value>zk1:2181,zk2:2181,zk3:2181</value>
+  <value>bigdata1:2181,bigdata2:2181,bigdata3:2181</value>
 </property>
 ```
 
-#### 4、配置hadoop使用root启动
+### 3.4、配置datanode节点信息
 
 ```bash
-[root@bigdata1 hadoop-3.1.3]# vim start-dfs.sh
+[root@bigdata1 hadoop-ha]# vim etc/hadoop/workers
+```
+
+```
+bigdata1
+bigdata2
+bigdata3
+```
+
+## 4、配置hadoop使用root启动
+
+```bash
+[root@bigdata1 hadoop-ha]# vim sbin/start-dfs.sh
 ```
 
 在文件中添加以下内容：
@@ -127,6 +168,8 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 HDFS_DATANODE_USER=root
 HDFS_NAMENODE_USER=root
 HDFS_SECONDARYNAMENODE_USER=root
+HDFS_ZKFC_USER=root
+HDFS_JOURNALNODE_USER=root
 ```
 
 同理，`stop-dfs.sh`中也需要添加上面的内容，此处不再赘述。
@@ -134,7 +177,7 @@ HDFS_SECONDARYNAMENODE_USER=root
 下面，修改`start-yarn.sh`文件
 
 ```bash
-[root@bigdata1 hadoop]# vim start-yarn.sh
+[root@bigdata1 hadoop-ha]# vim sbin/start-yarn.sh
 ```
 
 ```
@@ -153,20 +196,60 @@ YARN_NODEMANAGER_USER=root
 [root@bigdata1 hadoop-ha]# scp -r /opt/module/hadoop-ha/ bigdata2:/opt/module/
 [root@bigdata1 hadoop-ha]# scp -r /opt/module/hadoop-ha/ bigdata3:/opt/module/
 
-[root@bigdata1 hadoop-ha]# source /etc/profile
 [root@bigdata2 hadoop-ha]# source /etc/profile
 [root@bigdata3 hadoop-ha]# source /etc/profile
 ```
 
-## 6、在 ZooKeeper 中初始化 HA 状态
+## 6、三台机器运行JournalNode 守护进程
+
+```bash
+[root@bigdata1 hadoop-ha]# hadoop-daemon.sh start journalnode
+[root@bigdata2 hadoop-ha]# hadoop-daemon.sh start journalnode
+[root@bigdata3 hadoop-ha]# hadoop-daemon.sh start journalnode
+```
+
+## 7、在bigdata1上格式化namenode
+
+```bash
+[root@bigdata1 hadoop-ha]# hdfs namenode -format
+```
+
+## 8、启动hadoop
+
+```bash
+[root@bigdata1 hadoop-ha]# start-all.sh
+```
+
+## 9、在bigdata2上格式化namenode
+
+```bash
+[root@bigdata2 hadoop-ha]# hdfs namenode -bootstrapStandby
+```
+
+## 10、在 ZooKeeper 中初始化 HA 状态
 
 ```bash
 [root@bigdata1 hadoop-ha]# hdfs zkfc -formatZK
 ```
 
-## 7、启动hadoop
+结果：（出现 Successfully 即代表成果）
+
+```
+2024-12-15 23:24:03,453 INFO ha.ActiveStandbyElector: Successfully created /hadoop-ha/hadoopcluster in ZK.
+2024-12-15 23:24:03,454 INFO ha.ActiveStandbyElector: Session connected.
+2024-12-15 23:24:03,470 INFO zookeeper.ZooKeeper: Session: 0x100141961c50000 closed
+2024-12-15 23:24:03,471 INFO zookeeper.ClientCnxn: EventThread shut down for session: 0x100141961c50000
+2024-12-15 23:24:03,471 INFO tools.DFSZKFailoverController: SHUTDOWN_MSG: 
+/************************************************************
+SHUTDOWN_MSG: Shutting down DFSZKFailoverController at bigdata1/192.168.45.10
+************************************************************/
+```
+
+
+## 11、重启hadoop
 
 ```bash
+[root@bigdata1 hadoop-ha]# stop-all.sh
 [root@bigdata1 hadoop-ha]# start-all.sh
 ```
 
@@ -177,3 +260,5 @@ YARN_NODEMANAGER_USER=root
 
 [root@bigdata1 hadoop-ha]# yarn rmadmin -getServiceState rm2
 ```
+
+结果为 active 或 standby
