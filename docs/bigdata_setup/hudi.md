@@ -69,10 +69,10 @@ try (FSDataOutputStream outputStream = new FSDataOutputStream(baos, null)) {
 
 ## 6、使用maven对Hudi进行构建
 
-注意添加spark3.1,scala-2.12的编译参数
+注意添加spark3.1,scala-2.12的编译参数，需要在hudi-0.11.0目录下执行以下命令
 
 ```bash
-[root@bigdata1 hudi-0.11.0]# mvn clean package -DskipTests -Dcheckstyle.skip -Pspark3.1 -Pscala-2.12 -o
+[root@bigdata1 hudi-0.11.0]# mvn clean package -DskipTests -Pspark3.1 -Pscala-2.12 -o
 ```
 
 结果：

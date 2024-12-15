@@ -20,13 +20,13 @@
 
 ```
 将zookeeper-3.5.7分发到其他两个节点。
-[root@bigdata1 module]# scp -r /opt/module/zookeeper-3.5.7 bigdata1:/opt/module
-[root@bigdata1 module]# scp -r /opt/module/zookeeper-3.5.7 bigdata2:/opt/module
+[root@bigdata2 module]# scp -r /opt/module/zookeeper-3.5.7 bigdata2:/opt/module
+[root@bigdata3 module]# scp -r /opt/module/zookeeper-3.5.7 bigdata3:/opt/module
 
 修改其他两台的myid： 路径：cd /opt/module/zookeeper-3.5.7/zkData/myid
-[root@bigdata1 zkData]# vim myid
-2
 [root@bigdata2 zkData]# vim myid
+2
+[root@bigdata3 zkData]# vim myid
 3
 
 ```
@@ -44,38 +44,45 @@
 dataDir=/opt/module/zookeeper-3.5.7/zkData
 ```
 
-添加配置
+### 5、分发zoo.cfg文件
 
+```bash
+[root@bigdata1 conf]# scp zoo.cfg bigdata2:/opt/module/zookeeper-3.5.7/conf
+[root@bigdata1 conf]# scp zoo.cfg bigdata3:/opt/module/zookeeper-3.5.7/conf
 ```
+
+### 6、修改三台机器的zoo.cfg配置文件
+
+**添加配置**
+
+```bash
+[root@bigdata1 conf]# vim zoo.cfg
+
 # bigdata1
 server.1=0.0.0.0:2888:3888
 server.2=bigdata2:2888:3888
 server.3=bigdata3:2888:3888
 ```
 
-```
+```bash
+[root@bigdata2 ~]# vim /opt/module/zookeeper-3.5.7/conf/zoo.cfg
+
 # bigdata2
 server.1=bigdata1:2888:3888
 server.2=0.0.0.0:2888:3888
 server.3=bigdata3:2888:3888
 ```
 
-```
+```bash
+[root@bigdata3 ~]# vim /opt/module/zookeeper-3.5.7/conf/zoo.cfg
+
 # bigdata3
 server.1=bigdata1:2888:3888
 server.2=bigdata2:2888:3888
 server.3=0.0.0.0:2888:3888
 ```
 
-6. 向bigdata2和bigdata3同步zoo.cfg文件
-
-```shell
-
-[root@bigdata1 conf]# scp -r /opt/module/zookeeper-3.5.7/conf/zoo.cfg bigdata2:/opt/module/zookeeper-3.5.7/conf
-[root@bigdata1 conf]# scp -r /opt/module/zookeeper-3.5.7/conf/zoo.cfg bigdata3:/opt/module/zookeeper-3.5.7/conf
-```
-
-
+### 6、配置环境变量
 
 配置环境变量：（三台全部配）
 
