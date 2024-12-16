@@ -292,7 +292,7 @@ org.apache.hadoop.hive.ql.metadata.HiveException: java.lang.RuntimeException: Un
 **开启metastore服务：**
 
 ```bash
-nohup hive --servimce metastore > /dev/null 2>&1 &
+nohup hive --service metastore > /dev/null 2>&1 &
 ```
 
 - `nohup` 是一个 Linux 命令，它用于运行一个命令，同时忽略所有挂断（HUP）信号。这意味着即使你关闭了终端，命令也会继续运行。
