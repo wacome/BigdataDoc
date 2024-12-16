@@ -200,33 +200,7 @@ YARN_NODEMANAGER_USER=root
 [root@bigdata3 hadoop-ha]# source /etc/profile
 ```
 
-## 6、三台机器运行JournalNode 守护进程
-
-```bash
-[root@bigdata1 hadoop-ha]# hadoop-daemon.sh start journalnode
-[root@bigdata2 hadoop-ha]# hadoop-daemon.sh start journalnode
-[root@bigdata3 hadoop-ha]# hadoop-daemon.sh start journalnode
-```
-
-## 7、在bigdata1上格式化namenode
-
-```bash
-[root@bigdata1 hadoop-ha]# hdfs namenode -format
-```
-
-## 8、启动hadoop
-
-```bash
-[root@bigdata1 hadoop-ha]# start-all.sh
-```
-
-## 9、在bigdata2上格式化namenode
-
-```bash
-[root@bigdata2 hadoop-ha]# hdfs namenode -bootstrapStandby
-```
-
-## 10、在 ZooKeeper 中初始化 HA 状态
+## 6、在 ZooKeeper 中初始化 HA 状态
 
 ```bash
 [root@bigdata1 hadoop-ha]# hdfs zkfc -formatZK
@@ -243,6 +217,33 @@ YARN_NODEMANAGER_USER=root
 /************************************************************
 SHUTDOWN_MSG: Shutting down DFSZKFailoverController at bigdata1/192.168.45.10
 ************************************************************/
+```
+
+
+## 7、三台机器运行JournalNode 守护进程
+
+```bash
+[root@bigdata1 hadoop-ha]# hadoop-daemon.sh start journalnode
+[root@bigdata2 hadoop-ha]# hadoop-daemon.sh start journalnode
+[root@bigdata3 hadoop-ha]# hadoop-daemon.sh start journalnode
+```
+
+## 8、在bigdata1上格式化namenode
+
+```bash
+[root@bigdata1 hadoop-ha]# hdfs namenode -format
+```
+
+## 9、启动hadoop
+
+```bash
+[root@bigdata1 hadoop-ha]# start-all.sh
+```
+
+## 10、在bigdata2上格式化namenode
+
+```bash
+[root@bigdata2 hadoop-ha]# hdfs namenode -bootstrapStandby
 ```
 
 
