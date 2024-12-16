@@ -246,30 +246,6 @@ schemaTool completed
 ```
 
 > [!TIP]
-> 若出现以下错误，需要进conf/hive-site.xml文件中删除几个字符
-> 
-> ```
-> Exception in thread "main" java.lang.RuntimeException: com.ctc.wstx.exc.WstxParsingException: Illegal character entity: expansion character (code 0x8
- at [row,col,system-id]: [3215,96,"file:/opt/module/hive/conf/hive-site.xml"]
-> ```
-> 打开hive-site.xml文件，删除第3215行的`&#8;;`这几个字符：
-> 
-> 可以直接在vim中使用`:3215`跳转到3215行
-> 
-> ```xml
->  <property>
-    <name>hive.txn.xlock.iow</name>
-    <value>true</value>
-    <description>
-      Ensures commands with OVERWRITE (such as INSERT OVERWRITE) acquire Exclusive locks for&#8;;（前面这里删除）transactional tables.  This ensures that inserts (w/o overwrite) running concurrently
-      are not hidden by the INSERT OVERWRITE.
-    </description>
-  </property>
-> ```
-> 
-
-
-> [!TIP]
 >
 > 若出现以下错误，则需要取mysql中新建hive数据库
 >

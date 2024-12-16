@@ -92,7 +92,7 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 <!-- HDFS的默认文件系统URI -->
 <property>
   <name>fs.defaultFS</name>
-  <value>hdfs://hadoopcluster</value>
+  <value>hdfs://bigdata1</value>
 </property>
 
 <!-- 指定zookeeper -->
