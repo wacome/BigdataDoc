@@ -75,7 +75,7 @@ a1.sinks.k1.channel = c1
 > java.lang.NoSuchMethodError: com.google.common.base.Preconditions.checkArgument(ZLjava/lang/String;Ljava/lang/Object;)V
 > ```
 > 解决方法：
-> 删除flume中低版本的guava-19.0.jar包，将hadoop中的guava-27.0-jre.jar复制到hive的lib目录下即可
+> 删除flume中低版本的guava-11.0.2.jar包，将hadoop中的guava-27.0-jre.jar复制到hive的lib目录下即可
 > ```bash
 > [root@bigdata1 flume]# rm -f lib/guava*
 > ```
