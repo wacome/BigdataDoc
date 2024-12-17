@@ -45,7 +45,7 @@ a1.sources.r1.type = exec
 a1.sources.r1.command = tail -F /opt/module/hadoop-3.1.3/logs/hadoop-root-namenode-bigdata1.log
 # 配置sink
 a1.sinks.k1.type = hdfs
-a1.sinks.k1.hdfs.path = hdfs://bigdata1:8020/tmp/flume/%Y-%m-%d
+a1.sinks.k1.hdfs.path = hdfs://bigdata1:8020/tmp/flume/
 a1.sinks.k1.hdfs.fileType = DataStream
 # 使用内存作为通道
 a1.channels.c1.type = memory
