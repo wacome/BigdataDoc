@@ -22,13 +22,13 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 #### 3.1提取hadoop默认配置文件
 ```bash
 # 提取 core-default.xml,mapred-default.xml,yarn-default.xml
-[root@bigdata1 hadoop-3.1.3]# cd share/hadoop/common/client
-[root@bigdata1 client]# jar xf hadoop-common-2.7.7-client.jar core-default.xml
-[root@bigdata1 client]# jar xf hadoop-common-2.7.7-client.jar mapred-default.xml
-[root@bigdata1 client]# jar xf hadoop-common-2.7.7-client.jar yarn-default.xml
+[root@bigdata1 hadoop-3.1.3]# cd share/hadoop/client
+[root@bigdata1 client]# jar xf hadoop-client-api-3.1.3.jar core-default.xml
+[root@bigdata1 client]# jar xf hadoop-client-api-3.1.3.jar mapred-default.xml
+[root@bigdata1 client]# jar xf hadoop-client-api-3.1.3.jar yarn-default.xml
 
 # 提取 hdfs-default.xml
-[root@bigdata1 hadoop-3.1.3]# cd share/hadoop/common/hdfs
+[root@bigdata1 hadoop-3.1.3]# cd share/hadoop/hdfs
 [root@bigdata1 hdfs]# jar xf hadoop-hdfs-3.1.3.jar hdfs-default.xml
 
 # 重命名文件
