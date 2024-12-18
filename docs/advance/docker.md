@@ -279,6 +279,10 @@ rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
 rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
 rm -f /lib/systemd/system/basic.target.wants/*;\
 rm -f /lib/systemd/system/anaconda.target.wants/*;
+RUN mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup && \
+    curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo && \
+    yum clean all && \
+    yum makecache
 RUN yum -y install iproute firewalld wget openssh-server openssh-clients which
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
@@ -309,7 +313,7 @@ centos       latest       9152fc55782c   18 seconds ago   462MB
 ### 以特权模式运行容器
 
 ```bash
-docker run -d --name master --hostname=master --restart=always --privileged=true -p 50090:50090 -p 8088:8088 centos:latest /usr/sbin/init
+docker run -d --name master --hostname=master --restart=always --privileged=true -p 50090:50090 -p 8088:8088 -p 2221:22 centos:latest /usr/sbin/init
 ```
 
 若有`docker: Error response from daemon: Ports are not available: exposing port TCP 0.0.0.0:50090 -> 0.0.0.0:0: listen tcp 0.0.0.0:50090: bind: An attempt was made to access a socket in a way forbidden by its access permissions.`这个问题则需要打开Powershell管理员，然后再输入以下命令重启NAT网络：
@@ -335,10 +339,10 @@ docker exec -it master /bin/bash
 
 ```bash
 # slave1
-docker run -d --name slave1 --hostname=slave1 --restart=always --privileged=true centos:latest /usr/sbin/init
+docker run -d --name slave1 --hostname=slave1 --restart=always --privileged=true -p 2222:22 centos:latest /usr/sbin/init
 
 #slave2
-docker run -d --name slave2 --hostname=slave2 --restart=always --privileged=true centos:latest /usr/sbin/init
+docker run -d --name slave2 --hostname=slave2 --restart=always --privileged=true -p 2223:22 centos:latest /usr/sbin/init
 ```
 
 新开两个 Powershell 终端，分别进入容器
