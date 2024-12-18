@@ -151,7 +151,7 @@ bigdata3
 #### 3.7配置hadoop使用root启动
 
 ```bash
-[root@bigdata1 hadoop-3.1.3]# vim start-dfs.sh
+[root@bigdata1 hadoop-3.1.3]# vim sbin/start-dfs.sh
 ```
 
 在文件中添加以下内容：
@@ -167,7 +167,7 @@ HDFS_SECONDARYNAMENODE_USER=root
 下面，修改`start-yarn.sh`文件
 
 ```bash
-[root@bigdata1 hadoop]# vim start-yarn.sh
+[root@bigdata1 hadoop-3.1.3]# vim sbin/start-yarn.sh
 ```
 
 ```
