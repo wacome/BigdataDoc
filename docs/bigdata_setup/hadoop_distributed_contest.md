@@ -32,10 +32,10 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 [root@bigdata1 hdfs]# jar xf hadoop-hdfs-3.1.3.jar hdfs-default.xml
 
 # 重命名文件
-[root@bigdata1 hdfs]# mv hdfs-default.xml.template hdfs-site.xml
-[root@bigdata1 client]# mv core-default.xml.template core-site.xml
-[root@bigdata1 client]# mv mapred-default.xml.template mapred-site.xml
-[root@bigdata1 client]# mv yarn-default.xml.template yarn-site.xml
+[root@bigdata1 hdfs]# mv hdfs-default.xml hdfs-site.xml
+[root@bigdata1 client]# mv core-default.xml core-site.xml
+[root@bigdata1 client]# mv mapred-default.xml mapred-site.xml
+[root@bigdata1 client]# mv yarn-default.xml yarn-site.xml
 
 # 复制并替换原有配置文件
 [root@bigdata1 hdfs]# cp -f hdfs-site.xml /opt/module/hadoop-3.1.3/etc/hadoop/
