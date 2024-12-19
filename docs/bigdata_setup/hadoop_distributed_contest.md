@@ -38,7 +38,7 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 [root@bigdata1 client]# mv yarn-default.xml.template yarn-site.xml
 
 # 复制并替换原有配置文件
-[root@bigdata1 client]# cp -f hdfs-site.xml /opt/module/hadoop-3.1.3/etc/hadoop/
+[root@bigdata1 hdfs]# cp -f hdfs-site.xml /opt/module/hadoop-3.1.3/etc/hadoop/
 [root@bigdata1 client]# cp -f mapred-site.xml /opt/module/hadoop-3.1.3/etc/hadoop/
 [root@bigdata1 client]# cp -f yarn-site.xml /opt/module/hadoop-3.1.3/etc/hadoop/
 [root@bigdata1 client]# cp -f core-site.xml /opt/module/hadoop-3.1.3/etc/hadoop/
