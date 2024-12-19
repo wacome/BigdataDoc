@@ -48,6 +48,7 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 #### 3.2配置HDFS数据文件的主目录
 
 ```bash
+[root@bigdata1 hadoop-3.1.3]# cd etc/hadoop/
 [root@bigdata1 hadoop]# vim core-site.xml
 ```
 **使用vim的查找命令`/`查找对应修改内容**
@@ -139,6 +140,7 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 若只配置两个datanode节点，则写入bigdata2、bigdata3节点。
 
 ```bash
+[root@bigdata1 hadoop-3.1.3]# cd etc/hadoop/
 [root@bigdata1 hadoop]# vim workers
 ```
 
