@@ -84,6 +84,25 @@ source /etc/profile
 ```
 
 > [!TIP]
+> 若启动后，在logs里或者在启动时，出现错误：
+> ```
+> Caused by: java.lang.NumberFormatException: For input string: "30s"
+> ```
+> 解决方案：
+> 在hdfs-site.xml中修改所有的`30s`为`30`
+> ```bash
+> [root@bigdata1 ~]# vim /opt/module/hadoop/etc/hadoop/hdfs-site.xml
+> ```
+> ```xml
+> <property>
+  <name>dfs.client.datanode-restart.timeout</name>
+  <value>30</value>
+  </property>
+> ```
+>
+
+
+> [!TIP]
 > 若启动后，HMaster只存活了一会，之后就挂了，查看日志，发现错误为：The procedure WAL relies on the ability to hsync for proper operation during component failures, but the underlying filesystem does not support doing so. Please check the config value of 'hbase.procedure.store.wal.use.hsync' to set the desired level of robustness and ensure the config value of 'hbase.wal.dir' points to a FileSystem mount that can provide it.
 > 解决方案：
 > 在hbase-site.xml中添加如下配置
