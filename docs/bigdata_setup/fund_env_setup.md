@@ -339,8 +339,8 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.221-b11, mixed mode)
 
 ### 5.4、分发环境变量
 ```bash
-[root@bigdata1 ~]# scp /etc/profile bigdata2:/etc/
-[root@bigdata1 ~]# scp /etc/profile bigdata3:/etc/
+[root@bigdata1 ~]# scp /etc/profile.d/bigdata.sh bigdata2:/etc/profile
+[root@bigdata1 ~]# scp /etc/profile.d/bigdata.sh bigdata3:/etc/profile
 
 #刷新环境变量
 [root@bigdata2 ~]# source /etc/profile
