@@ -32,7 +32,7 @@ YARN_CONF_DIR=/opt/module/hadoop-3.1.3/etc/hadoop
 #注意修改hadoop路径为自己的路径
 ```
 
-#### 5.修改配置**
+#### 5.修改配置
 
 当机器内存较少时，防止执行过程进行被意外杀死，可以做如下配置：
 修改hadoop配置文件/opt/hadoop-3.1.3/etc/hadoop/yarn-site.xml，添加如下内容
