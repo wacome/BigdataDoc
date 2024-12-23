@@ -32,14 +32,30 @@ YARN_CONF_DIR=/opt/module/hadoop-3.1.3/etc/hadoop
 #注意修改hadoop路径为自己的路径
 ```
 
-#### 5.重启Hadoop
+#### 5.修改配置**
+
+当机器内存较少时，防止执行过程进行被意外杀死，可以做如下配置：
+修改hadoop配置文件/opt/hadoop-3.1.3/etc/hadoop/yarn-site.xml，添加如下内容
+
+```xml
+<property>
+	<name>yarn.nodemanager.pmem-check-enabled</name>
+	<value>false</value>
+</property>
+<property>
+	<name>yarn.nodemanager.vmem-check-enabled</name>
+	<value>false</value>
+</property
+```
+
+#### 6.重启Hadoop
 
 ```bash
 [root@bigdata1 opt]# stop-all.sh
 [root@bigdata1 opt]# start-all.sh
 ```
 
-#### 6、启动spark集群 （注意执行路径）
+#### 7、启动spark集群 （注意执行路径）
 
 ```bash
 # 注意是具体的sbin路径，而不是直接执行start-all.sh，因为会和hadoop的start-all.sh冲突
