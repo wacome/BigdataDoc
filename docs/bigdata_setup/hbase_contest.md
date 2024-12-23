@@ -68,7 +68,20 @@ bigdata2
 bigdata3
 ```
 
-## 5、分发hbase目录和环境变量
+## 5、修改hbase-env.sh
+
+```bash
+[root@bigdata1 hbase-2.2.3]# vim conf/hbase-env.sh
+```
+
+将下面`HBASE_MANAGES_ZK`的配置内容注释取消掉，并配置为`false`
+
+```bash
+# Tell HBase whether it should manage it's own instance of ZooKeeper or not.                
+export HBASE_MANAGES_ZK=false
+```
+
+## 6、分发hbase目录和环境变量
 
 ```bash
 [root@bigdata1 hbase-2.2.3]# scp -r /opt/module/hbase-2.2.3 bigdata2:/opt/module/
@@ -83,7 +96,7 @@ bigdata3
 source /etc/profile
 ```
 
-## 6、启动hbase集群
+## 7、启动hbase集群
 
 **启动hbase之前一定要先启动 hadoop 和 zookeeper**
 
@@ -124,3 +137,18 @@ java.lang.NumberFormatException: For input string: "30s"
 > ```
 > **修改后将该文件同步到其他节点**
 >
+
+## 8、查看命名空间
+
+正确启动后，输入以下命令进入`hbase shell`，查看是否有默认的命名空间
+
+```bash
+[root@bigdata1 hbase-2.2.3]# hbase shell
+
+hbase(main):001:0> list_namespace                                                           
+NAMESPACE                                                                                   
+default                                                                                     
+hbase                                                                                       
+2 row(s)                                                                                    
+Took 0.3310 seconds 
+```
