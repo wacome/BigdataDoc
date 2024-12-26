@@ -61,7 +61,7 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
 <!-- 标识 NameNode 将写入/读取编辑的 JN 组的 URI -->
 <property>
   <name>dfs.namenode.shared.edits.dir</name>
-  <value>qjournal://bigdata1:8485;bigdata2:8485/hadoopcluster</value>
+  <value>qjournal://bigdata1:8485;bigdata2:8485;bigdata3:8485/hadoopcluster</value>
 </property>
 
 <!-- 配置自动故障转移 -->
@@ -223,9 +223,9 @@ SHUTDOWN_MSG: Shutting down DFSZKFailoverController at bigdata1/192.168.45.10
 ## 7、三台机器运行JournalNode 守护进程
 
 ```bash
-[root@bigdata1 hadoop-ha]# hadoop-daemon.sh start journalnode
-[root@bigdata2 hadoop-ha]# hadoop-daemon.sh start journalnode
-[root@bigdata3 hadoop-ha]# hadoop-daemon.sh start journalnode
+[root@bigdata1 hadoop-ha]# hdfs --daemon start journalnode
+[root@bigdata2 hadoop-ha]# hdfs --daemon start journalnode
+[root@bigdata3 hadoop-ha]# hdfs --daemon start journalnode
 ```
 
 ## 8、在bigdata1上格式化namenode
