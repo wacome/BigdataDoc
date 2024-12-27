@@ -75,3 +75,18 @@ export HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
 > classloader.check-leaked-classloader: false
 > ```
 >
+
+---
+
+> [!TIP]
+> 若之前配置的hadoop为高可用，则可能出现以下错误：
+> ```
+> Caused by: org.apache.hadoop.ipc.RemoteException(org.apache.hadoop.ipc.StandbyException): Operation category READ is not supported in state standby.
+> ```
+> 解决方法：
+> 将主节点自动故障转移至active状态
+> ```bash
+> [root@bigdata1 conf]# hdfs haadmin -failover nn2 nn1 
+> Failover to NameNode at bigdata1/192.168.45.10:8020 successful
+> ```
+>
