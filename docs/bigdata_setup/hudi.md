@@ -114,6 +114,12 @@ try (FSDataOutputStream outputStream = new FSDataOutputStream(baos, null)) {
 [root@bigdata1 hudi-0.11.0]# spark-shell --conf "spark.serializer=org.apache.spark.serializer.KryoSerializer"
 ```
 
+# 捷径：spark直接运行hudi最终结果
+
+```bash
+[root@bigdata1 hudi-0.11.0]# spark-shell --jars /opt/software/hudi-spark3.1-bundle_2.12-0.12.0.jar --conf 'spark.serializer=org.apache.spark.serializer.KryoSerializer' --conf 'spark.sql.extensions=org.apache.spark.sql.hudi.HoodieSparkSessionExtension'
+```
+
 ## 9、测试
 
 输入题目要求代码测试

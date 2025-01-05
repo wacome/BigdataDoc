@@ -64,6 +64,12 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
   <value>qjournal://bigdata1:8485;bigdata2:8485;bigdata3:8485/hadoopcluster</value>
 </property>
 
+<!-- 配置 NameNode 间的故障转移 -->
+<property>
+  <name>dfs.client.failover.proxy.provider.hadoopcluster</name>
+  <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+</property>
+
 <!-- 配置自动故障转移 -->
 <property>
   <name>dfs.ha.automatic-failover.enabled</name>
@@ -99,6 +105,12 @@ export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
  <property>
    <name>ha.zookeeper.quorum</name>
    <value>bigdata1:2181,bigdata2:2181,bigdata3:2181</value>
+ </property>
+
+ <!-- 配置hadoop临时目录-->
+ <property>
+    <name>hadoop.tmp.dir</name>
+     <value>/opt/module/hadoop-3.1.3/tmp</value>
  </property>
 ```
 
@@ -200,7 +212,13 @@ YARN_NODEMANAGER_USER=root
 [root@bigdata3 hadoop-ha]# source /etc/profile
 ```
 
-## 6、在 ZooKeeper 中初始化 HA 状态
+## 6、启动JournalNode 守护进程
+
+```bash
+[root@bigdata1 hadoop-ha]# hadoop-daemons.sh start journalnode
+```
+
+## 7、在 ZooKeeper 中初始化 HA 状态
 
 ```bash
 [root@bigdata1 hadoop-ha]# hdfs zkfc -formatZK
@@ -219,25 +237,16 @@ SHUTDOWN_MSG: Shutting down DFSZKFailoverController at bigdata1/192.168.45.10
 ************************************************************/
 ```
 
-
-## 7、三台机器运行JournalNode 守护进程
-
-```bash
-[root@bigdata1 hadoop-ha]# hdfs --daemon start journalnode
-[root@bigdata2 hadoop-ha]# hdfs --daemon start journalnode
-[root@bigdata3 hadoop-ha]# hdfs --daemon start journalnode
-```
-
 ## 8、在bigdata1上格式化namenode
 
 ```bash
 [root@bigdata1 hadoop-ha]# hdfs namenode -format
 ```
 
-## 9、启动hadoop
+## 9、启动bigdata1上的namenode
 
 ```bash
-[root@bigdata1 hadoop-ha]# start-all.sh
+[root@bigdata1 hadoop-ha]# hadoop-daemon.sh start namenode
 ```
 
 ## 10、在bigdata2上格式化namenode
@@ -246,11 +255,9 @@ SHUTDOWN_MSG: Shutting down DFSZKFailoverController at bigdata1/192.168.45.10
 [root@bigdata2 hadoop-ha]# hdfs namenode -bootstrapStandby
 ```
 
-
-## 11、重启hadoop
+## 11、启动hadoop
 
 ```bash
-[root@bigdata1 hadoop-ha]# stop-all.sh
 [root@bigdata1 hadoop-ha]# start-all.sh
 ```
 
